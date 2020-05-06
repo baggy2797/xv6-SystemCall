@@ -1,0 +1,42 @@
+CS550 Operating Systems - Fall 19
+
+TEAM - 03
+
+MEMBERS - 
+Chaitanya Kulkarni	B00814455
+Aditya Bhagwat		B00811694
+
+
+Notes on Project - 01 (Local Machine)
+
+PART - 01
+
+As per the instructions given, we followed the steps and installed the qemu emulator to run xv6.
+
+check the file - myecho.c for the code for printing in user space.
+
+To print in Kernel mode, we have edited the main.c file and put the print statement in the same to run in kernel space.
+
+
+PART - 02
+
+How to add a system call ?
+
+- We need to add/edit several files to add a new system call. We looked at implementation of existing systems calls to add shutdown and shutdown2 system calls. Below are the files we need to edit to add a new system call:
+	syscall.h
+	defs.h
+	user.h
+	syscall.c
+	usys.S
+	sysproc.c
+	proc.c
+
+Initially, we commented the STUB function written in the given shutdown.c and shutdown2.c files. Then edited the below files to add new system calls.
+	1. syscall.h - Here we add the system call definition and its respective number. These numbers should be consecutive and unique otherwise it may throw an error. These numbers are indices into a table of pointers defined in syscall.c
+	2. defs.h - Here we add a forward declaration of the new system call i.e. define a new function prototype for new system call.
+	3. user.h - Here we define the function that is called from the shell (All function protoypes and utility library functions are stored here)
+	4. syscall.c - This is the entry code for all system calls. he syscall(void) function is the entry function for all system calls. Each system call is identified by a unique integer, which is placed in the processor’s eax register. The syscall function checks the integer to ensure that it is in the appropriate range and then calls the corresponding function that implements that call by making an indirect funciton call to a function in the syscalls[] table. You need to ensure that the kernel function that implements your system call is in the proper sequence in the syscalls array.
+	5. usys.S - This contains the macros for each code for each system call. The macro simply places the system call number into the eax register and then invokes the system call (Simply connect the call from user to the appropriate system call function)
+	6. sysproc.c - The functions in this file are called from syscall. We can add our new function/logic in this file. But here in our project we have written the actual logic in the file proc.c and called these function in sysproc.c 
+
+
